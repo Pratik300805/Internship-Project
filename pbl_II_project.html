@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/e526d2ada4.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="pbl_project.css">
+    <script defer src="script.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+<img src="https://graphicsfamily.com/wp-content/uploads/edd/2021/06/Food-Logo-Design-1-scaled.jpg" class="wcu-card-image" />            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav ml-auto">
+                    <a class="nav-link" href="#section-home" id="navItem2">Home</a>
+                    <a class="nav-link active" id="navItem1" href="#whupage">
+                        Why Choose Us?
+                        <span class="sr-only">(current)</span>
+                    </a>
+                    <a class="nav-link" href="#section-exploreMenuPage" id="navItem2">Explore Menu</a>
+                    <a class="nav-link" href="#deliveryAndPaymentSection" id="navItem3">Delivery & Payment</a>
+                    <a class="nav-link" href="#followUsSection" id="navItem4">Follow Us</a>
+                    <a class="nav-link" style="font-family:Roboto; color: #dee6ed; " href="orders.html" id="navItem5">My Orders</a>
+                    <a class="nav-link" href="cart.html" onclick="goToCart()" style="color: #dee6ed;">
+                        <i class="fa-solid fa-cart-shopping">Cart</i>
+                    </a>
+                   <a class="nav-link" id="authButton" href="#" onclick="logout()" style="color: #dee6ed;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="banner-section-bg-container d-flex justify-content-center flex-column" id="section-home">
+        <div class="text-center">
+            <h1 class="banner-heading mb-3">Get Delicious Food Anytime</h1>
+            <p class="banner-caption mb-4">Eat Smart & Healthy</p>
+            <button class="custom-button" >
+                <a href="#section-exploreMenuPage" class="custom-button" style="text-decoration:none;">
+                    Order Now
+                </a>
+            </button>
+            <button class="custom-outline-button" >
+                <a href="tablebooking.html" style="color:white; text-decoration:none;"> Book A Table  </a>
+            </button> 
+        </div>
+    </div>
+
+    <div class="wcu-section pt-5 pb-5" id="whupage">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="wcu-section-heading">Why Choose Us?</h1>
+                    <p class="wcu-section-description">
+                        We use both original recipes and classic versions of famous food
+                        items.
+                    </p>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <div class="wcu-card p-3 mb-3">
+                        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836" class="wcu-card-image" />
+                        <h1 class="wcu-card-title mt-3">Food Service</h1>
+                        <p class="wcu-card-description">
+                            Experience fine dining at the comfort of your home. All our orders are carefully packed and arranged to give you the nothing less than perfect.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <div class="wcu-card p-3 mb-3">
+                       <img src="https://images.unsplash.com/photo-1610832958506-aa56368176cf" class="wcu-card-image" />
+                        <h1 class="wcu-card-title mt-3">Fresh Food</h1>
+                        <p class="wcu-card-description">
+                            The Fresh Food group provides fresh-cut fruits and vegetables
+                            directly picked from our partner farms and farm houses so that
+                            you always get them tree to plate.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <div class="wcu-card p-3 mb-3">
+                        <img src="https://images.unsplash.com/photo-1607082349566-187342175e2f" class="wcu-card-image" />
+
+                        <h1 class="wcu-card-title mt-3">Best Offers</h1>
+                        <p class="wcu-card-description">
+                            Food Coupons & Offers upto
+                            <span class="offers">50% OFF</span>
+                            and Exclusive Promo Codes on All Online Food Orders.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="explore-menu-section" id="section-exploreMenuPage">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="explore-menu-heading">Explore Menu</h1>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class=" menu-item-card p-4 mb-5 shadow">
+                        <img src="https://images.unsplash.com/photo-1544025162-d76694265947" class="menu-item-image w-100 ">
+                        <h1 class="menu-card-title">Non-Veg Starters</h1>
+                        <h4  class="menu-item-link">
+                            200 Rs.
+                        </h4>
+                        <div class="d-flex flex-row justify-content-center">
+                            <button class="custom-button add-to-cart mt-2" 
+                                    onclick="addToCart('Non-Veg Starters', 200, 'https://images.unsplash.com/photo-1544025162-d76694265947')">
+                                Add To Cart
+                            </button>
+                            <button class="custom-button add-to-cart  mt-2 ml-2" 
+                                    onclick="orderNow('Non-Veg Starters', 200, 'https://images.unsplash.com/photo-1544025162-d76694265947')">
+                                Order Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class=" menu-item-card p-4 mb-5  shadow">
+                        <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950" class="menu-item-image w-100 ">
+                        <h1 class="menu-card-title">Veg Starters</h1>
+                        <h4  class="menu-item-link">
+                            180 Rs.
+                        </h4>
+                        <div class="d-flex flex-row justify-content-center">
+                            <button class="custom-button add-to-cart mt-2" 
+                                    onclick="addToCart('Veg Starters', 200, 'https://images.unsplash.com/photo-1601050690597-df0568f70950', '')">
+                                Add To Cart
+                            </button>
+                            <button class="custom-button add-to-cart mt-2 ml-2" 
+                                    onclick="orderNow('Veg Starters', 200, 'https://images.unsplash.com/photo-1601050690597-df0568f70950', '')">
+                                Order Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class=" menu-item-card p-4 mb-5  shadow">
+                        <img src="https://images.unsplash.com/photo-1547592180-85f173990554" class="menu-item-image w-100 ">
+                        <h1 class="menu-card-title">Soups</h1>
+                        <h4  class="menu-item-link">
+                            90 Rs.
+                        </h4>
+                        <div  class="d-flex flex-row justify-content-center">
+                            <button class="custom-button add-to-cart  mt-2"  onclick="addToCart('Soups', 90, 'https://images.unsplash.com/photo-1547592180-85f173990554', '')" >Add To Cart</button>
+                            <button class="custom-button add-to-cart  mt-2" onclick="orderNow('Soups', 90, 'https://images.unsplash.com/photo-1547592180-85f173990554', '')"> Order Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class=" menu-item-card p-4 mb-5 shadow">
+                        <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2" class="menu-item-image w-100 ">
+                        <h1 class="menu-card-title">Fish & Sea Food</h1>
+                        <h4  class="menu-item-link">
+                            300 Rs.
+                        </h4>
+                        <div  class="d-flex flex-row justify-content-center">
+                            <button class="custom-button add-to-cart  mt-2"  onclick="addToCart('Fish & Sea Food', 300, 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2', '')" >Add To Cart</button>
+                            <button class="custom-button add-to-cart  mt-2" onclick="orderNow('Fish & Sea Food', 300, 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2', '')"> Order Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                  
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class=" menu-item-card p-4 mb-5  shadow">
+                        <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=600&h=400&q=80" class="menu-item-image w-100 ">
+                        <h1 class="menu-card-title">Main Course</h1>
+                        <h4  class="menu-item-link">
+                            240 Rs.
+                        </h4>
+                        <div  class="d-flex flex-row justify-content-center">
+                            <button class="custom-button add-to-cart  mt-2"  onclick="addToCart('Main Course', 240, 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=600&h=400&q=80', '')" >Add To Cart</button>
+                            <button class="custom-button add-to-cart  mt-2" onclick="orderNow('Main Course', 240, 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=600&h=400&q=80 ', '')" > Order Now</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class=" menu-item-card p-4 mb-5 shadow">
+                        <img src="https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=600&h=400&q=80" class="menu-item-image w-100 ">
+                        <h1 class="menu-card-title">Noodles</h1>
+                        <h4  class="menu-item-link">
+                            160 Rs.
+                        </h4>
+                        <div  class="d-flex flex-row justify-content-center">
+                            <button class="custom-button add-to-cart  mt-2"  onclick="(addToCart('Noodles', 160, 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=600&h=400&q=80', ''))" >Add To Cart</button>
+                            <button class="custom-button add-to-cart  mt-2" onclick="(orderNow('Noodles', 160, 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=600&h=400&q=80', ''))"> Order Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class=" menu-item-card p-4 mb-5 shadow">
+                        <img src="https://images.unsplash.com/photo-1546793665-c74683f339c1?auto=format&fit=crop&w=600&h=400&q=80" class="menu-item-image w-100 ">
+                        <h1 class="menu-card-title">Salads</h1>
+                        <h4  class="menu-item-link">
+                            100 Rs.
+                        </h4>
+                        <div  class="d-flex flex-row justify-content-center">
+                            <button class="custom-button add-to-cart  mt-2"  onclick="addToCart('Salads', 100, 'https://images.unsplash.com/photo-1546793665-c74683f339c1?auto=format&fit=crop&w=600&h=400&q=80', '')" >Add To Cart</button>
+                            <button class="custom-button add-to-cart  mt-2" onclick="orderNow('Salads', 100, 'https://images.unsplash.com/photo-1546793665-c74683f339c1?auto=format&fit=crop&w=600&h=400&q=80', '')" > Order Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class=" menu-item-card p-4 mb-5  shadow">
+                        <img src="https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=600&h=400&q=80" class="menu-item-image w-100 ">
+                        <h1 class="menu-card-title">Desserts</h1>
+                        <h4  class="menu-item-link">
+                            140 Rs.
+                        </h4>
+                        <div  class="d-flex flex-row justify-content-center">
+                            <button class="custom-button add-to-cart  mt-2"  onclick="addToCart('Desserts', 140, 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=600&h=400&q=80', '')" >Add To Cart</button>
+                            <button class="custom-button add-to-cart  mt-2" onclick="orderNow('Desserts', 140, 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=600&h=400&q=80', '')"> Order Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="healthy-food-section pt-5 pb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-5">
+                    <div class="text-center">
+                        <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=600&h=500&q=80" class="healthy-food-section-img" />
+                    </div>
+                </div>
+                <div class="col-12 col-md-7">
+                    <h1 class="healthy-food-section-heading">
+                        Fresh, Healthy, Organic, Delicious Fruits
+                    </h1>
+                    <p class="healthy-food-section-description">
+                        Say no to harmful chemicals and go fully organic with our range of
+                        fresh fruits and veggies. Pamper your body and your senses with
+                        the true and unadulterated gifts from mother nature. with the true
+                        and unadulterated gifts from mother nature.
+                    </p>
+                    
+                    <div id="videoframe">
+                     <img src="https://www.bing.com/th/id/OIP.3o0GXgsdN8-SjV3cxnL5VgHaE8?w=235&h=211&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2" width="600" height="280">
+                    <a href="https://youtu.be/pq3Otf0zbdk?si=U756KMKafzcyt4yv" target="_blank"> 
+                        <button class="custom-button" style="margin-top:10px;"> Watch Now</button>
+                    </a>
+                
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="delivery-and-payment-section pt-5 pb-5 " id="deliveryAndPaymentSection">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-5 order-1 order-md-2">
+                    <div class="text-center">
+                        <img src="https://img.freepik.com/premium-vector/payment-upon-delivery-faceless-woman-paying-with-credit-card-order-delivered-home-address-by-internet-store-courier-flat-vector-illustration_776652-2646.jpg" alt="" class="delivery-and-payment-section-img" />
+                    </div>
+                </div>
+                <div class="col-12 col-md-7 order-2 order-md-1">
+                    <h1 class="delivery-and-payment-section-heading">
+                        Delivery and Payment
+                    </h1>
+                    <p class="delivery-and-payment-section-description">
+                        Enjoy hassle-free payment with the plenitude of payment options
+                        available for you. Get live tracking and locate your food on a
+                        live map. It's quite a sight to see your food arrive to your door.
+                        Plus, you get a 25% discount on every order every time you pay
+                        online.
+                    </p>
+                    <button class="custom-button"><a href="#section-exploreMenuPage" style="color:white;">Order Now</a>
+                    </button>
+                    
+                    <div class="mt-3">
+                       <img src="https://www.pngitem.com/pimgs/m/3-38170_phonepe-logo-png-phone-pe-transparent-png.png" class="payment-card-img"/>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" class="payment-card-img" />
+
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" class="payment-card-img" />
+
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo.svg" class="payment-card-img" />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="thanking-customers-section pt-5 pb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-7 d-flex flex-column justify-content-center">
+                    <h1 class="thanking-customers-section-heading">
+                        Thank you for being a valuable customer to us.
+                    </h1>
+                    <p class="thanking-customers-section-description">
+                        We have a surprise gift for you
+                    </p>
+                    <div class="d-md-none">
+             
+                    </div>
+                    <div>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="custom-button" data-toggle="modal" data-target="#exampleModal">
+                            Redeem Gift
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog pt-5">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Gift voucher</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <img src="https://img.freepik.com/free-vector/realistic-gift-voucher-banners_23-2149116211.jpg?w=2000" class="w-100" />
+                                        <button class="custom-button" data-dismiss="modal"  onclick="window.location.href='#section-exploreMenuPage'" >
+                                            Order Now
+                                        </button>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-5 d-none d-md-inline">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="follow-us-section pt-5 pb-5" id="followUsSection">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="follow-us-section-heading">Follow Us</h1>
+                </div>
+                <div class="col-12">
+                    <div class="d-flex flex-row justify-content-center">
+                        <div class="follow-us-icon-container">
+                            <a href="#">
+                                <i class="fab fa-twitter icon"></i>
+                            </a>
+                        </div>
+                        <div class="follow-us-icon-container">
+                            <a href="#">
+                                <i class="fab fa-instagram icon"></i>
+                            </a>
+                        </div>
+                        <div class="follow-us-icon-container">
+                            <a href="#">
+                                <i class="fab fa-facebook icon" ></i>
+                            </a>
+                        </div>
+
+                        <div class="follow-us-icon-container">
+                            <a href="#">
+                                <i class="fa-brands fa-whatsapp icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-section pt-5 pb-5 ">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <img src="https://graphicsfamily.com/wp-content/uploads/edd/2021/06/Food-Logo-Design-1-scaled.jpg" class="food-munch-logo" />
+                    <h1 class="footer-section-mail-id">welcome@foodmunch.com</h1>
+                    <p class="footer-section-address">
+                        foodmunch , abc Street ,
+                        pune City, pin- 416001
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+    <!-- Add this modal near the end of the body, before scripts -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Login / Sign Up</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="authForm">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" autocomplete="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" autocomplete="current-password" required>
+                        </div>
+                        <button type="submit" id=""loginBtn class="btn btn-primary">Login</button>
+                        <button type="button" id="switchToSignup" class="btn btn-link">Don't have an account? Sign Up</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <!-- Add after other Firebase scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+
+    <!-- Your scripts (now using non-module approach) -->
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

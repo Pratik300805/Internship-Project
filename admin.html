@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/e526d2ada4.js" crossorigin="anonymous"></script>
+    <style>
+        body { padding-top: 120px; background-color: #f8f9fa; }
+        .admin-nav { background-color: #343a40; }
+        .order-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .order-item {
+            display: flex;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .order-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+        .status-pending { color: #ffc107; font-weight: bold; }
+        .status-accepted { color: #28a745; font-weight: bold; }
+        .status-rejected { color: #dc3545; font-weight: bold; }
+        #authContainer { max-width: 400px; margin: 100px auto; }
+        #adminDashboard { display: none; }
+        #authMessage { transition: all 0.3s; }
+        .nav-tabs .nav-link { cursor: pointer; }
+    </style>
+</head>
+<body>
+    <!-- Authentication Container -->
+    <div id="authContainer" class="container shadow p-4 bg-white rounded">
+        <ul class="nav nav-tabs" id="authTabs">
+            <li class="nav-item">
+                <a class="nav-link active" id="login-tab" data-toggle="tab" href="#loginTab">Admin Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="register-tab" data-toggle="tab" href="#registerTab">Register Admin</a>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-3">
+            <!-- Login Tab -->
+            <div class="tab-pane fade show active" id="loginTab">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" class="form-control" id="loginEmail" autocomplete="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" class="form-control" id="loginPassword" autocomplete="current-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+            </div>
+
+            <!-- Register Tab -->
+            <div class="tab-pane fade" id="registerTab">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerName">Full Name</label>
+                        <input type="text" class="form-control" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" class="form-control" id="registerEmail" autocomplete="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password (min 8 chars)</label>
+                        <input type="password" class="form-control" id="registerPassword" autocomplete="new-password" minlength="8" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirm">Confirm Password</label>
+                        <input type="password" class="form-control" id="registerConfirm" autocomplete="new-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block">Register</button>
+                </form>
+            </div>
+        </div>
+        <div id="authMessage" class="mt-3"></div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard">
+        <nav class="navbar navbar-expand-lg navbar-dark admin-nav fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="https://graphicsfamily.com/wp-content/uploads/edd/2021/06/Food-Logo-Design-1-scaled.jpg" width="80" height="70">
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="pbl_II_project.html"><i class="fas fa-arrow-left"></i> Back to Site</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <h2 class="text-center mb-4" style="font-size:37px; font-family:Roboto; font-weight:Bold;">Order Management</h2>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <select id="statusFilter" class="form-control">
+                        <option value="all">All Orders</option>
+                        <option value="pending">Pending</option>
+                        <option value="accepted">Accepted</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="col-md-6 text-right">
+                    <button class="btn btn-primary" id="refreshBtn">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            <div id="ordersContainer"></div>
+        </div>
+    </div>
+
+    <script src="firebase-config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Firebase
+            const auth = firebase.auth();
+            const db = firebase.firestore();
+
+            // DOM elements
+            const authContainer = document.getElementById('authContainer');
+            const adminDashboard = document.getElementById('adminDashboard');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const authMessage = document.getElementById('authMessage');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const statusFilter = document.getElementById('statusFilter');
+            const refreshBtn = document.getElementById('refreshBtn');
+            const ordersContainer = document.getElementById('ordersContainer');
+            const loginTab = document.getElementById('login-tab');
+            const registerTab = document.getElementById('register-tab');
+
+            // Initialize Bootstrap tabs
+            $('#authTabs a').on('click', function(e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+
+            // Check auth state on load
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    verifyAdmin(user.uid);
+                } else {
+                    showAuth();
+                }
+            });
+
+            // Verify admin status
+            function verifyAdmin(uid) {
+                db.collection("admins").doc(uid).get()
+                    .then(doc => {
+                        if (doc.exists) {
+                            showDashboard();
+                            loadOrders();
+                        } else {
+                            auth.signOut();
+                            showAuth();
+                            showMessage("You don't have admin privileges", "danger");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Admin verification error:", error);
+                        showAuth();
+                    });
+            }
+
+            // Show authentication forms
+            function showAuth() {
+                authContainer.style.display = "block";
+                adminDashboard.style.display = "none";
+                // Reset forms
+                loginForm.reset();
+                registerForm.reset();
+                authMessage.innerHTML = '';
+            }
+
+            // Show admin dashboard
+            function showDashboard() {
+                authContainer.style.display = "none";
+                adminDashboard.style.display = "block";
+            }
+
+            // Show message
+            function showMessage(text, type) {
+                authMessage.innerHTML = `<div class="alert alert-${type}">${text}</div>`;
+                setTimeout(() => {
+                    authMessage.innerHTML = '';
+                }, 5000);
+            }
+
+            // Handle login
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                try {
+                    showMessage("Logging in...", "info");
+                    await auth.signInWithEmailAndPassword(email, password);
+                } catch (error) {
+                    console.error("Login error:", error);
+                    showMessage(error.message, "danger");
+                }
+            });
+
+            // Handle registration
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('registerName').value;
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+                const confirm = document.getElementById('registerConfirm').value;
+
+                if (password !== confirm) {
+                    showMessage("Passwords don't match", "danger");
+                    return;
+                }
+
+                try {
+                    showMessage("Creating admin account...", "info");
+                    
+                    // Create auth account
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    
+                    // Add to admins collection
+                    await db.collection("admins").doc(userCredential.user.uid).set({
+                        email: email,
+                        name: name,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        isActive: true
+                    });
+                    
+                    showMessage("Admin account created successfully! Please login.", "success");
+                    // Switch to login tab after successful registration
+                    $(registerTab).tab('dispose');
+                    $(loginTab).tab('show');
+                    registerForm.reset();
+                } catch (error) {
+                    console.error("Registration error:", error);
+                    let errorMessage = error.message;
+                    
+                    // More user-friendly error messages
+                    if (error.code === 'auth/email-already-in-use') {
+                        errorMessage = "This email is already registered. Please login instead.";
+                    } else if (error.code === 'auth/weak-password') {
+                        errorMessage = "Password should be at least 8 characters";
+                    }
+                    
+                    showMessage(errorMessage, "danger");
+                }
+            });
+
+            // Handle logout
+            logoutBtn.addEventListener('click', () => {
+                auth.signOut();
+            });
+
+            // Load orders
+            function loadOrders() {
+                const status = statusFilter.value;
+                let query = db.collection("orders").orderBy("timestamp", "desc");
+                
+                if (status !== 'all') {
+                    query = query.where("status", "==", status);
+                }
+                
+                ordersContainer.innerHTML = `
+                    <div class="text-center mt-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <p>Loading orders...</p>
+                    </div>
+                `;
+                
+                query.get().then(querySnapshot => {
+                    if (querySnapshot.empty) {
+                        ordersContainer.innerHTML = '<div class="alert alert-info">No orders found</div>';
+                        return;
+                    }
+                    
+                    let ordersHTML = '';
+                    querySnapshot.forEach(doc => {
+                        const order = doc.data();
+                        const orderDate = order.timestamp ? order.timestamp.toDate().toLocaleString() : "Unknown date";
+                        
+                        let itemsHTML = '';
+                        order.items.forEach(item => {
+                            itemsHTML += `
+                                <div class="order-item">
+                                    <img src="${item.image || 'https://via.placeholder.com/80'}" alt="${item.name}">
+                                    <div>
+                                        <h5>${item.name}</h5>
+                                        <p>₹${item.price} × ${item.quantity} = ₹${item.price * item.quantity}</p>
+                                        ${item.description ? `<p class="text-muted">${item.description}</p>` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        
+                        ordersHTML += `
+                            <div class="order-card mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h4>Order #${doc.id.substring(0, 8)}</h4>
+                                    <span class="status-${order.status}">${order.status.toUpperCase()}</span>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Customer ID:</strong> ${order.userId.substring(0, 8)}...</p>
+                                        <p><strong>Order Type:</strong> ${order.type === 'cart' ? 'Cart Order' : 'Single Item'}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Order Date:</strong> ${orderDate}</p>
+                                        <p><strong>Total Amount:</strong> ₹${order.total}</p>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                <h5>Order Items:</h5>
+                                ${itemsHTML}
+                                
+                                <div class="text-right mt-3">
+                                    ${order.status === 'pending' ? `
+                                        <button class="btn btn-success mr-2" onclick="updateOrderStatus('${doc.id}', 'accepted')">
+                                            <i class="fas fa-check"></i> Accept
+                                        </button>
+                                        <button class="btn btn-danger" onclick="updateOrderStatus('${doc.id}', 'rejected')">
+                                            <i class="fas fa-times"></i> Reject
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    ordersContainer.innerHTML = ordersHTML;
+                }).catch(error => {
+                    console.error("Error loading orders:", error);
+                    ordersContainer.innerHTML = `
+                        <div class="alert alert-danger">
+                            Failed to load orders: ${error.message}
+                        </div>
+                    `;
+                });
+            }
+
+            // Update order status
+            window.updateOrderStatus = function(orderId, status) {
+                if (!confirm(`Are you sure you want to ${status} this order?`)) return;
+                
+                db.collection("orders").doc(orderId).update({
+                    status: status,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then(() => {
+                    alert(`Order ${status} successfully`);
+                    loadOrders();
+                })
+                .catch(error => {
+                    console.error("Error updating order:", error);
+                    alert(`Failed to ${status} order: ${error.message}`);
+                });
+            };
+
+            // Event listeners
+            statusFilter.addEventListener('change', loadOrders);
+            refreshBtn.addEventListener('click', loadOrders);
+        });
+    </script>
+</body>
+</html>

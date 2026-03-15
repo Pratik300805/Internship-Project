@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/e526d2ada4.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="pbl_project.css">
+    <style>
+        body{
+            background-color: #d8efe4;
+        }
+        .cart-card {
+            background-color: white;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        .cart-card img {
+            width: 200px;
+            border-radius: 16px;
+        }
+        .cart-heading{
+            color: #43b213;
+            font-family: "Roboto";
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            margin-top:100px;
+        }
+        .clear-cart-button{
+            color:rgb(255, 255, 255);
+            background-color: #8b803d;
+            width: 130px;
+            height: 45px;
+            border-width: 0;
+            border-radius: 8px;
+            margin-right: 10px;
+            margin-bottom:50px;
+            margin-top:40px;
+        }
+
+        #cart-items {
+            display: flex;
+            flex-direction:row;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="https://graphicsfamily.com/wp-content/uploads/edd/2021/06/Food-Logo-Design-1-scaled.jpg" class="food-munch-logo" />
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav ml-auto">
+                    <a class="nav-link" href="pbl_II_project.html#section-home" id="navItem2">Home</a>
+                    <a class="nav-link active" id="navItem1" href="pbl_II_project.html#whupage">
+                        Why Choose Us?
+                        <span class="sr-only">(current)</span>
+                    </a>
+                    <a class="nav-link" href="pbl_II_project.html#section-exploreMenuPage" id="navItem2">Explore Menu</a>
+                    <a class="nav-link" href="pbl_II_project.html#deliveryAndPaymentSection" id="navItem3">Delivery & Payment</a>
+                    <a class="nav-link" href="pbl_II_project.html#followUsSection" id="navItem4">Follow Us</a>
+                    <a class="nav-link" style="font-family:Roboto; color: #dee6ed; " href="orders.html" id="navItem5">My Orders</a>
+                    <a class="nav-link" href="#" onclick="goToCart()" style="color: #dee6ed;">
+                        <i class="fa-solid fa-cart-shopping">Cart</i>
+                    </a>
+                   <a class="nav-link" id="authButton" href="#" onclick="logout()" style="color: #dee6ed;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <h1 class="cart-heading text-center ">Shopping Cart</h1>
+    <div class="container">
+        <div class="row">
+            <div class=" col-12 mt-4 mb-3 d-flex flex-row justify-content-center">
+                <div id="cart-items" class="shadow text-center"></div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <button onclick="clearCart()" class="clear-cart-button clear">
+            Clear Cart
+        </button>
+        <button class="clear-cart-button place-order-btn" onclick="placeOrder()">
+            Place Order
+        </button>
+        <button class="clear-cart-button">
+            <a href="pbl_II_project.html" style="color: inherit; text-decoration: none;">Back to Menu</a>
+        </button>
+    </div>
+
+    <div class="modal fade" id="authModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Authentication Required</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Please login to view your orders.</p>
+                    <button class="btn btn-primary" onclick="window.location.href='pbl_II_project.html'">
+                        Go to Login
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+    <!-- At end of body -->
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+    <script src="cart.js"></script>
+</body>
+</html>
